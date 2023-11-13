@@ -1,4 +1,4 @@
-package artisan
+package prowjob
 
 type Commander interface {
 	GetCommand() string

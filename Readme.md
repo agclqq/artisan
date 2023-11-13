@@ -1,77 +1,106 @@
-# artisan简介
-artisan是一个自定义命令行工具，用于JOB类的快速开发。
+# what is prowJob?
 
-使用方式： `artisan $command [$arg1 ...]`
+prowJob is a custom command line tool for rapid development of JOB.
 
-其中$command的格式建议为 `$packageName`:`$commandName`
-# 使用方式
-1. 通过实现artisan.Commander接口，实现自定义命令，推荐
-    ```go
-    type TestCommand struct {
-    }
+Common way： `prowjob $command [$arg1 ...]`
+
+# Getting started
+1. getting prowjob
+   ```shell
+   go get github.com/agclqq/prowjob
+   ```
+   1. Implement prowjob.Commander interface
+      ```go
+       type TestCommand struct {
+       }
     
-    func (t TestCommand) GetCommand() string {
-        return "command:test"
-    }
+       func (t TestCommand) GetCommand() string {
+           return "command:test"
+       }
     
-    func (t TestCommand) Usage() string {
-        return "test command"
-    }
+       func (t TestCommand) Usage() string {
+           return "test command"
+       }
     
-    func (t TestCommand) Handle(context *artisan.Context) {
-        fmt.Println("test command")
-    }
-    ```
+       func (t TestCommand) Handle(ctx *prowjob.Context) {
+           fmt.Println(ctx.params)
+           fmt.Println("test command")
+       }
+      ```
+      Compile prowjob.go to prowjob
+      ```go
+      package main
+      import (
+          "github.com/agclqq/prowjob"
+      )
+      
+      func main() {
+           job := prowjob.New()
+           job.Add(TestCommand{})
+           job.Run()
+       }
+      ```
+      run job
+      ```shell
+      ./prowjob command:test arg1 -arg2 2 arg7 7 --arg3 3 -arg4=4 --arg5=5 arg6=6
+      ```
+   2. Implement custom commands
+
+      Compile prowjob.go to prowjob
+       ```go
+       package main
+       import (
+           "fmt"
+           "github.com/agclqq/prowjob"
+       )
+   
+       func main() {
+           job := prowjob.New()
+           job.AddFunc("command:testFunc", func(ctx *prowjob.Context) {
+               fmt.Println(ctx.params)
+               fmt.Println("test command")
+           })
+           job.Run()
+       }
+       ```
+      run job
+      ```shell
+      ./prowjob command:testFunc arg1 -arg2 2 arg7 7 --arg3 3 -arg4=4 --arg5=5 arg6=6
+      ```
+3. prowjob.Run method parameter usage
+
+   The above two usage methods are compiled by the main method, using the command line to invoke.
+
+   Here is how to call by code, which can be used for debug or inter-system calls
     ```go
     func main() {
-        art := artisan.New()
-        art.Add(commands.TestCommand{})
-        art.Run()
+        job.Run("your command", "arg1", "arg2","...")
     }
     ```
 
-2. 通过自定义方法来实现自定义命令
-    ```go
-    func main() {
-        art := artisan.New()
-        art.AddFunc("command:test", func(context *artisan.Context) {
-            fmt.Println("test command")
-        })
-        art.Run()
-    }
-    ```
-3. artisan.Run方法的参数
-artisan.Run方法的参数为可变参数，可以通过命令行传入，也可以在代码中传入。
-一般推荐通过命令行传入，这样可以在不修改代码的情况下，修改命令行参数。
-    ```go
-    func main() {
-        art.Run("your command", "arg1", "arg2","...")
-    }
-    ```
+4. parameter description
+   Command parameters support prefixes -, --, and no prefixes.
+   
+   The key values are separated by equal signs or Spaces. If the parameter has no value, it is considered to be an empty string value.
+   
+   The params value of prowjob.Context is map[string]string,key is the parameter name, and value is the parameter value
 
-4. 运行
-   build后执行，第一个参数为命令，后续参数为命令参数。命令参数可以通过`-`或`--`来指定参数名，也可以用无前缀参数名，支持等号或空格为参数赋值，如果参数无值，则认为是字符串空值。
-    ```shell
-    ./artisan command:test arg1 -arg2 2 arg7 7 --arg3 3 -arg4=4 --arg5=5 arg6=6
-    ```
-### 功能类型
-artisan分为两大块内容
-1. 官方命令
-   1. 在infrastructure/artisan中实现，后续可拆为单独组件
-   2. 现有功能包：
-      1. make：创建资源，包括controller,model,grpc,command等
-      2. list：查看资源
-2. 自定义命令
-   1. 实现artisan.Commander接口的业务内容
-   2. 注册命令到artisan
+   | 参数       | 键    | 值   |
+   |----------|------|-----|
+   | arg1     | arg1 | ""  |
+   | arg1 1   | arg1 | "1" |
+   | arg1=1   | arg1 | "1" |
+   | -arg2    | arg2 | ""  |
+   | -arg2 2  | arg2 | "2" |
+   | -arg2=2  | arg2 | "2" |
+   | --arg3   | arg3 | ""  |
+   | --arg3 3 | arg3 | "3" |
+   | --arg3=3 | arg3 | "3" |
 
-### 使用示例
-1. 创建controller
-```text
-go run cmd/artisan/artisan.go make:controller yourController
-```
-2. 创建model
-```text
-go run cmd/artisan/artisan.go make:model yourModel
-```
-
+   ```shell
+   ./prowjob command:test arg1 -arg2 2 arg7 7 --arg3 3 -arg4=4 --arg5=5 arg6=6
+   ```
+   ctx.params的值为：
+   ```go
+    map[arg1: arg2:2 arg3:3 arg4:4 arg5:5 arg6:6 arg7:7]
+   ```
