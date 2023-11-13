@@ -1,6 +1,7 @@
 [中文说明](Readme_zh.md)
 
 # what is prowJob?
+[![Go](https://github.com/agclqq/prowjob/actions/workflows/go.yml/badge.svg)](https://github.com/agclqq/prowjob/actions/workflows/go.yml)
 
 prowJob is a custom command line tool for rapid development of JOB.
 

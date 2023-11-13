@@ -1,5 +1,6 @@
 [英文说明](Readme.md)
 # prowJob简介
+[![Go](https://github.com/agclqq/prowjob/actions/workflows/go.yml/badge.svg)](https://github.com/agclqq/prowjob/actions/workflows/go.yml)
 
 prowJob是一个自定义命令行工具，用于JOB类的快速开发。
 
