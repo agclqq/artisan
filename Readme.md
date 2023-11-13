@@ -4,8 +4,6 @@
 
 prowJob is a custom command line tool for rapid development of JOB.
 
-Common way： `prowjob $command [$arg1 ...]`
-
 # Getting started
 
 1. getting prowjob
