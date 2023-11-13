@@ -73,11 +73,11 @@ func (e *CommandEngine) RunWithCtx(ctx context.Context, param ...string) {
 func (e *CommandEngine) Invoke(ctx context.Context, param []string) {
 	cmd, ok := e.Commands[param[0]]
 	if !ok {
-		fmt.Printf("error:"+NO_COMMAND, param[0])
+		fmt.Printf("error:"+NO_COMMAND+"\n", param[0])
 		return
 	}
 	if cmd.Command != param[0] {
-		fmt.Printf("error:"+INCONFORMITY, param[0], cmd.Command)
+		fmt.Printf("error:"+INCONFORMITY+"\n", param[0], cmd.Command)
 		return
 	}
 	newParam := make([]string, len(param)-1)

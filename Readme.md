@@ -1,3 +1,4 @@
+[中文说明](Readme_zh.md)
 # what is prowJob?
 
 prowJob is a custom command line tool for rapid development of JOB.

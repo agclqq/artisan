@@ -1,3 +1,4 @@
+[英文说明](Readme.md)
 # prowJob简介
 
 prowJob是一个自定义命令行工具，用于JOB类的快速开发。
