@@ -29,6 +29,7 @@ prowJob是一个自定义命令行工具，用于JOB类的快速开发。
     func main() {
         job := prowjob.New()
         job.Add(commands.TestCommand{})
+        job.Add(...)
         job.Run()
     }
    ```
@@ -46,6 +47,7 @@ prowJob是一个自定义命令行工具，用于JOB类的快速开发。
 			fmt.Println(ctx.params)
             fmt.Println("test command")
         })
+        job.AddFunc(...)
         job.Run()
     }
     ```

@@ -39,6 +39,7 @@ prowJob is a custom command line tool for rapid development of JOB.
        func main() {
             job := prowjob.New()
             job.Add(TestCommand{})
+            job.Add(...)
             job.Run()
         }
        ```
@@ -62,6 +63,7 @@ prowJob is a custom command line tool for rapid development of JOB.
                 fmt.Println(ctx.params)
                 fmt.Println("test command")
             })
+            job.AddFunc(...)
             job.Run()
         }
         ```
