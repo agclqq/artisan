@@ -25,7 +25,7 @@ type Context struct {
 
 type Command struct {
 	Command     string
-	InsType     string
+	Ins         Commander
 	HandlerFunc CommandFunc
 	Desc        string
 }
@@ -38,7 +38,7 @@ func New() *CommandEngine {
 func (e *CommandEngine) Add(commander Commander, args ...string) {
 	c := Command{
 		Command:     commander.GetCommand(),
-		InsType:     "interface",
+		Ins:         commander,
 		HandlerFunc: commander.Handle,
 		Desc:        commander.Usage(),
 	}
@@ -50,7 +50,6 @@ func (e *CommandEngine) Add(commander Commander, args ...string) {
 func (e *CommandEngine) AddFunc(command string, f CommandFunc, args ...string) {
 	c := Command{
 		Command:     command,
-		InsType:     "func",
 		HandlerFunc: f,
 	}
 	if len(args) > 0 {
